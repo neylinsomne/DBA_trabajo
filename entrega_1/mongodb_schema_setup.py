@@ -8,14 +8,17 @@ Correcciones:
 
 from pymongo import MongoClient, GEOSPHERE, ASCENDING, UpdateOne
 from pymongo.errors import CollectionInvalid
+from dotenv import load_dotenv
 import geopandas as gpd
 import pandas as pd
 import json, os
 
+load_dotenv()
+
 # ─────────────────────────────────────────────
-# RUTAS
+# RUTAS — configuradas via .env
 # ─────────────────────────────────────────────
-BASE       = "/Users/zoet/Desktop/upme-solar-project/data/Proyecto_DBA"
+BASE       = os.environ["DATA_DIR"]
 MGN_PATH   = f"{BASE}/MGN_ADM_MPIO_GRAFICO.geojson"
 PDET_EXCEL = f"{BASE}/MunicipiosPDET.xlsx"
 MS_PATH    = f"{BASE}/Colombia.geojsonl"
@@ -23,10 +26,10 @@ GOOGLE_GDB = f"{BASE}/col_buildings.gdb" if os.path.exists(f"{BASE}/col_building
              else f"{BASE}/col_buildings"
 
 # ─────────────────────────────────────────────
-# CONEXIÓN
+# CONEXIÓN — configurada via .env
 # ─────────────────────────────────────────────
-client = MongoClient("mongodb://localhost:27017/")
-db     = client["upme_solar"]
+client = MongoClient(os.environ["MONGO_URI"])
+db     = client[os.environ.get("MONGO_DB", "upme_solar")]
 try:
     client.admin.command("ping")
     print("✓ Conectado a MongoDB\n")

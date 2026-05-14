@@ -2,12 +2,15 @@ from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 from shapely.geometry import shape
 from shapely.validation import make_valid
+from dotenv import load_dotenv
 import geopandas as gpd
-import json
+import json, os
 
-MS_PATH = "/Users/zoet/Desktop/upme-solar-project/data/Proyecto_DBA/Colombia.geojsonl"
+load_dotenv()
 
-db = MongoClient("mongodb://localhost:27017/")["upme_solar"]
+MS_PATH = f"{os.environ['DATA_DIR']}/Colombia.geojsonl"
+
+db = MongoClient(os.environ["MONGO_URI"])[os.environ.get("MONGO_DB", "upme_solar")]
 db.buildings_microsoft.delete_many({})
 print("✓ Colección limpia — iniciando carga Microsoft\n")
 
